@@ -1,31 +1,19 @@
-Object.defineProperty(Array.prototype, 'find', {
-	configurable: true,
-	value: function find(callback) {
-		if (this === undefined || this === null) {
-			throw new TypeError(this + 'is not an object');
-		}
+// Array.prototype.find - MIT License (c) 2013 Paul Miller <http://paulmillr.com>
+// For all details and docs: https://github.com/paulmillr/array.prototype.find
+'use strict';
+var ES = require('es-abstract/es6');
 
-		if (!(callback instanceof Function)) {
-			throw new TypeError(callback + ' is not a function');
-		}
-
-		var
-		object = Object(this),
-		scope = arguments[1],
-		arraylike = object instanceof String ? object.split('') : object,
-		length = Math.max(Math.min(arraylike.length, 9007199254740991), 0) || 0,
-		index = -1,
-		element;
-
-		while (++index < length) {
-			if (index in arraylike) {
-				element = arraylike[index];
-
-				if (callback.call(scope, element, index, object)) {
-					return element;
-				}
-			}
-		}
-	},
-	writable: true
-});
+module.exports = function find(predicate) {
+	var list = ES.ToObject(this);
+	var length = ES.ToInteger(ES.ToLength(list.length));
+	if (!ES.IsCallable(predicate)) {
+		throw new TypeError('Array#find: predicate must be a function');
+	}
+	if (length === 0) return undefined;
+	var thisArg = arguments[1];
+	for (var i = 0, value; i < length; i++) {
+		value = list[i];
+		if (ES.Call(predicate, thisArg, [value, i, list])) return value;
+	}
+	return undefined;
+};
