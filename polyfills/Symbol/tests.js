@@ -27,7 +27,7 @@ it('should have Symbol as the constructor property', function() {
 it('should silently fail when assigning new properties', function (){
 	var a = Symbol("1");
 	a.b = '1';
-	expect(a.b).to.be.undefined;
+	expect(a.b).to.be(undefined);
 });
 
 // A tough one right now
@@ -91,12 +91,12 @@ it('Symbol.keyFor should throw if not given a symbol', function() {
 });
 
 it('Symbol.keyFor should return undefined if can not find symbol in global registry', function() {
-	expect(Symbol.keyFor(Symbol("5"))).to.be.undefined;
+	expect(Symbol.keyFor(Symbol("5"))).to.be(undefined);
 });
 
 it('Symbol() should not add the symbol to the global registry', function() {
 	var sym = Symbol("6");
-	expect(Symbol.keyFor(sym)).to.be.undefined;
+	expect(Symbol.keyFor(sym)).to.be(undefined);
 });
 
 it('Symbol["for"] should create new symbol if can not find symbol in global registry', function() {

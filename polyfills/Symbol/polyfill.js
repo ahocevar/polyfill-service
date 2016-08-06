@@ -54,7 +54,7 @@
 					value: {}
 				});
 			} catch (e) {
-				o.internalSymbol = value
+				o.internalSymbol = {};
 			}
 		}
 		o[internalSymbol]['@@' + uid] = enumerable;
@@ -76,11 +76,11 @@
 	var get = function get(){};
 	var onlyNonSymbols = function (name) {
 		return  name != internalSymbol &&
-			!hOP.call(source, name);
+			!hOP.call(ObjectProto, name);
 	};
 	var onlySymbols = function (name) {
 		return  name != internalSymbol &&
-			hOP.call(source, name);
+			hOP.call(ObjectProto, name);
 	};
 	var propertyIsEnumerable = function propertyIsEnumerable(key) {
 		var uid = '' + key;
@@ -95,13 +95,13 @@
 			configurable: true,
 			get: get,
 			set: function (value) {
-			setDescriptor(this, uid, {
-				enumerable: false,
-				configurable: true,
-				writable: true,
-				value: value
-			});
-			addInternalIfNeeded(this, uid, true);
+				setDescriptor(this, uid, {
+					enumerable: false,
+					configurable: true,
+					writable: true,
+					value: value
+				});
+				addInternalIfNeeded(this, uid, true);
 			}
 		};
 		try {
@@ -109,7 +109,7 @@
 		} catch (e) {
 			ObjectProto[uid] = descriptor.value;
 		}
-		return freeze(source[uid] = defineProperty(
+		return freeze(defineProperty(
 			Object(uid),
 			'constructor',
 			sourceConstructor
@@ -179,7 +179,7 @@
 	// defining `Symbol.for(key)`
 	descriptor.value = function (key) {
 		var uid = prefix.concat(prefix, key, random);
-		return uid in ObjectProto ? source[uid] : setAndGetSymbol(uid);
+		return uid in ObjectProto ? source[uid] : (freeze(source[uid] = setAndGetSymbol(uid, true)));
 	};
 	defineProperty(Symbol, 'for', descriptor);
 
