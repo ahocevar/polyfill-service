@@ -8,6 +8,7 @@
 		"safari": "*",
 		"chrome": "<38",
 		"firefox": "<36",
+		"android": "*",
 		"ios_saf": "*",
 		"opera": "<25",
 		"firefox_mob": "<36"
